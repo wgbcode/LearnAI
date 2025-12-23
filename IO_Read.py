@@ -24,7 +24,7 @@ with open("./IO/package.json", "r", encoding='utf-8') as f:
 
 ### 适用：大文件，使用 read(size)，要不内存可能会爆
 with open("./IO/big.txt", "r") as f:
-    print(f'大文件:\n{f.read((100))}')
+    print(f'大文件:\n{f.read(100)}')
 
 
 ### 适用：二进制文件
