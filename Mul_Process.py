@@ -1,5 +1,6 @@
 import os,time,random
-from multiprocessing import Process,Pool
+from multiprocessing import Process,Pool,Queue
+import subprocess
 
 """
 关于 fork 方法：
@@ -20,6 +21,22 @@ def run_process2(name):
     time.sleep(random.random()*3)
     end = time.time()
     print(f"子进程执行结束，name:{name}, 时间：{end-start}")
+
+
+# 写数据进程执行的代码:
+def write(q):
+    print('Process to write: %s' % os.getpid())
+    for value in ['A', 'B', 'C']:
+        print('Put %s to queue...' % value)
+        q.put(value)
+        time.sleep(random.random())
+
+# 读数据进程执行的代码:
+def read(q):
+    print('Process to read: %s' % os.getpid())
+    while True:
+        value = q.get(True)
+        print('Get %s from queue.' % value)
 
 """
 1、作为脚本执行：__name__ == '__main__' 中的代码只会在执行脚本，即 python Mul_Process.py 时，才会执行
@@ -42,10 +59,32 @@ if __name__ == '__main__':  # ✅ 关键：保护入口代码
     p=Pool(4)
     for i in range(5):
         p.apply_async(run_process2, args=(i,))
+    print("调用 close 方法，禁止继续创建子进程")
     p.close()
     print("等待所有子进程执行完毕")
     p.join()
-    print("所有子进程都已执行结束")
+    print("所有子进程都已执行结束\n\n\n")
+
+    ### 3、使用 subprocess 模块执行命令行（外部进程）
+    print("$ nslookup www.python.org")
+    r = subprocess.run("nslookup www.python.org", shell=True)
+    print("Exit code:", r.returncode)
+    print("\n\n\n")
+
+
+    ### 4、进程间通讯。在 main 中创建三个子进程（queue、read、write），read 进程从 queue 进程读数据，write 从 queue 写数据
+    print("Queue: 创建 q、pw、pr 三个子进程")
+    q = Queue()
+    pw = Process(target=write, args=(q,))
+    pr = Process(target=read, args=(q,))
+    print("启动 pw 进程，写入")
+    pw.start()
+    print("启动 pr 进程，读取")
+    pr.start()
+    print('等待 pw 结束')
+    pw.join()
+    print('pr 是死进程，会无限循环，只能强行结束')
+    pr.terminate()
 
 
 
