@@ -9,6 +9,13 @@ import subprocess
 3、子进程可以通过 os.fork().getppid() 拿到父进程的 id
 """
 
+"""
+关于分布式进程：
+1、学习文档：https://liaoxuefeng.com/books/python/process-thread/process-manager/index.html
+2、原理1：在机器一上创建 10 个进程，然后经过 QueueManager 进行封装，并通过网格接口将 QueueManager 实例发送到机器二
+3、原理2：机器一和机器二，都通过  QueueManager 实例 get_task_queue() 和 get_result_queue() 两个方法拿到进程实例，并进行业务操作
+"""
+
 
 # 定义一个子进程的回调函数，它包括子进程需要执行的业务代码
 def run_process(name):
