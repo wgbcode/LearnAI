@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request,render_template
 
 """
 其它 web 开发框架：
@@ -12,7 +12,8 @@ app = Flask(__name__)
 
 @app.route("/", methods=['GET', 'POST'])
 def hello_world():
-    return "<p>Hello, World!</p>"
+    # return "<p>Hello, World!</p>"
+    return render_template('index.html')
 
 @app.route('/signin', methods=['GET'])
 def signin_form():
