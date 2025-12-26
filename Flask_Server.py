@@ -6,6 +6,7 @@ from flask import Flask, request,render_template
 2、web.py：一个小巧的 web 框架
 3、Bottle：和 Flask 类似
 4、Tornado：Facebook 的开源异步 web 框架
+5、FastAPI：vue3+，只构建后端 API 接口，能自动生成接口文档（Flask：简单API）
 """
 
 app = Flask(__name__)
