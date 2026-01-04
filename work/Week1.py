@@ -10,6 +10,7 @@
 
 import numpy as np
 import pandas as pd
+import matplotlib
 import matplotlib.pyplot as plt
 import os
 
@@ -85,6 +86,20 @@ print("=" * 50)
 
 # 请在下方编写你的代码
 # TODO: 完成题目3
+df = pd.DataFrame({
+   "姓名":['张三', '李四', '王五', '赵六', '钱七'],
+   "年龄":[25, 30, 28, 35, 22],
+   "城市":['北京', '上海', '广州', '北京', '深圳'],
+   "薪资":[8000, 12000, 10000, 15000, 7000]
+})
+print(f"创建后的 DataFrame：\n{df}")
+print(f"只显示前3行：\n{df[:3]}")
+print(f"年龄大于25岁的员工：\n{df[df['年龄']>25]}")
+print(f"薪资大于10000的员工：\n{df[df['薪资']>10000]}")
+print(f"计算每个城市的平均工资：\n{df.groupby('城市')['薪资'].mean()}")
+df_sort = df.sort_values(by='薪资',ascending=False)
+print(f"按薪资降序排列：\n{df_sort}")
+print(f"薪资最高的员工信息：\n{df_sort.iloc[0]}")
 
 
 # ============================================
@@ -106,6 +121,53 @@ print("=" * 50)
 
 # 请在下方编写你的代码
 # TODO: 完成题目4
+# 1、设置matplotlib支持中文显示（兼容Windows和Mac）
+# （1）指定使用无衬线字体
+matplotlib.rcParams['font.family'] = ['sans-serif']
+# （2）设置一个包含多个中文字体的备选列表
+matplotlib.rcParams['font.sans-serif'] = [
+    'SimHei',    # 中文黑体，在Windows中常见
+    'Microsoft YaHei', # 微软雅黑，在Windows中常见，屏幕显示清晰
+    'Heiti TC',  # 黑体-繁，在macOS中常见
+    'PingFang SC',   # 苹方，在macOS中常见
+    'KaiTi',     # 楷体
+    'FangSong'   # 仿宋
+]
+# （3）解决负号('-')显示为方块的问题
+matplotlib.rcParams['axes.unicode_minus'] = False
+
+# 2、创建2x2的子图布局
+fig, axs = plt.subplots(2, 2, figsize=(10, 8))
+
+# 3、子图1：绘制sin(x)和cos(x)的折线图（x范围0到2π），添加图例和网格
+# （1）创建数据
+x1 = np.linspace(0, 2 * np.pi, 100)
+# （2）绘制正弦函数
+ax_left = axs[0, 0]
+line_sin, = ax_left.plot(x1, np.sin(x1), color='blue', label='Sin(x)')
+ax_left.set_ylabel('Sin(x)')
+# （3）绘制余弦函数
+ax_right = ax_left.twinx() # 创建双Y轴
+line_cos, = ax_right.plot(x1, np.cos(x1), color='red', label='Cos(x)')
+ax_right.set_ylabel('Cos(x)')
+# （4）添加网格、图例、标题
+ax_left.grid(True) # 添加网格
+lines = [line_sin, line_cos]
+labels = [line.get_label() for line in lines]
+ax_left.legend(lines, labels, loc='upper right') # 添加图例
+axs[0, 0].set_title('正弦和余弦')
+
+# 4、子图2：绘制一个包含5个类别的柱状图
+axs[0, 1].bar(['Python', 'Java', 'C++', 'JavaScript', 'Go'], [85, 70, 60, 90, 75])
+axs[0, 1].set_title('柱状图')
+
+# 5. 子图3：绘制一个饼图，展示5个城市的占比：[30, 25, 20, 15, 10]，标签为['北京', '上海', '广州', '深圳', '杭州']
+# 6. 子图4：绘制一个散点图，x和y都是100个随机数（正态分布），添加颜色映射
+
+# 7. 使用tight_layout调整布局，并保存图片为'作业_可视化结果.png'
+plt.tight_layout()
+plt.savefig('作业_可视化结果.png', dpi=300, bbox_inches='tight')
+plt.show()
 
 
 # ============================================
