@@ -8,7 +8,7 @@
 # 4. 注意代码规范和注释
 # ============================================
 
-# import numpy as np
+import numpy as np
 # import pandas as pd
 # import matplotlib.pyplot as plt
 import os
@@ -29,6 +29,10 @@ print("=" * 50)
 
 # 请在下方编写你的代码
 # TODO: 完成题目1
+name = 'wgb'
+age = 20
+lang = 'python'
+print(f"我是{name},今年{age}岁，最喜欢的编程语言是{lang}")
 
 
 # ============================================
@@ -48,6 +52,15 @@ print("=" * 50)
 
 # 请在下方编写你的代码
 # TODO: 完成题目2
+a2 = np.random.randint(1, 101,10)
+print(f"创建后的一维数组：\n{a2}")
+print(f"最大值：{a2.max()}")
+print(f"最小值：{a2.min()}")
+print(f"平均值：{a2.mean()}")
+print(f"大于50的元素：{a2[a2>50]}")
+b2 = a2.reshape(2,5)
+print(f"转换后的二维数组（2行5列）：\n{b2}")
+print(f"二维数组每行的平均值：{np.mean(b2,axis=1)}")
 
 
 # ============================================
