@@ -122,24 +122,13 @@ print("=" * 50)
 # 请在下方编写你的代码
 # TODO: 完成题目4
 # 1、设置matplotlib支持中文显示（兼容Windows和Mac）
-# （1）指定使用无衬线字体
-matplotlib.rcParams['font.family'] = ['sans-serif']
-# （2）设置一个包含多个中文字体的备选列表
-matplotlib.rcParams['font.sans-serif'] = [
-    'SimHei',    # 中文黑体，在Windows中常见
-    'Microsoft YaHei', # 微软雅黑，在Windows中常见，屏幕显示清晰
-    'Heiti TC',  # 黑体-繁，在macOS中常见
-    'PingFang SC',   # 苹方，在macOS中常见
-    'KaiTi',     # 楷体
-    'FangSong'   # 仿宋
-]
-# （3）解决负号('-')显示为方块的问题
+matplotlib.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'Heiti TC']
 matplotlib.rcParams['axes.unicode_minus'] = False
 
 # 2、创建2x2的子图布局
 fig, axs = plt.subplots(2, 2, figsize=(10, 8))
 
-# 3、子图1：绘制sin(x)和cos(x)的折线图（x范围0到2π），添加图例和网格
+# 3、子图1：绘制折线图
 # （1）创建数据
 x1 = np.linspace(0, 2 * np.pi, 100)
 # （2）绘制正弦函数
@@ -157,14 +146,22 @@ labels = [line.get_label() for line in lines]
 ax_left.legend(lines, labels, loc='upper right') # 添加图例
 axs[0, 0].set_title('正弦和余弦')
 
-# 4、子图2：绘制一个包含5个类别的柱状图
+# 4、子图2：绘制柱状图
 axs[0, 1].bar(['Python', 'Java', 'C++', 'JavaScript', 'Go'], [85, 70, 60, 90, 75])
 axs[0, 1].set_title('柱状图')
 
-# 5. 子图3：绘制一个饼图，展示5个城市的占比：[30, 25, 20, 15, 10]，标签为['北京', '上海', '广州', '深圳', '杭州']
-# 6. 子图4：绘制一个散点图，x和y都是100个随机数（正态分布），添加颜色映射
+# 5. 子图3：绘制饼图
+axs[1, 0].pie([30, 25, 20, 15, 10], labels=['北京', '上海', '广州', '深圳', '杭州'])
+axs[1, 0].set_title('饼图')
 
-# 7. 使用tight_layout调整布局，并保存图片为'作业_可视化结果.png'
+# 6. 子图4：绘制散点图
+x = np.random.normal(0, 1, 100) # 均值；标准差；数量
+y = np.random.normal(0, 1, 100)
+colors = np.sqrt(x**2 + y**2)
+scatter_plot = axs[1, 1].scatter(x, y, c=colors, cmap='viridis', alpha=0.7, s=50)
+axs[1, 1].set_title('散点图')
+
+# 7. 调整布局和保存
 plt.tight_layout()
 plt.savefig('作业_可视化结果.png', dpi=300, bbox_inches='tight')
 plt.show()
@@ -187,7 +184,35 @@ print("=" * 50)
 
 # 请在下方编写你的代码
 # TODO: 完成题目5
+math_scores = np.random.normal(75, 10, 100) # 均值；标准差；数量
+print(f"学生成绩：\n{math_scores}")
+df_students = pd.DataFrame({
+    'student_id':range(1,101),
+    'math_scores':math_scores
+})
+print(f"DataFrame：\n{df_students}")
+average_score = df_students['math_scores'].mean()
+print(f"平均分：\n{average_score}")
+print(f"最高分：\n{df_students['math_scores'].max()}")
+print(f"最低分：\n{df_students['math_scores'].min()}")
+print(f"及格率：\n{(df_students['math_scores']>=60).mean()*100}%")
 
+# 绘制直方图
+plt.figure(figsize=(12, 6))
+n, bins, patches = plt.hist(df_students['math_scores'], bins=20,
+                           edgecolor='black', alpha=0.7,
+                           color='skyblue', label='成绩分布')
+plt.title('100名学生数学成绩分布直方图', fontsize=14, fontweight='bold')
+plt.xlabel('数学成绩', fontsize=12)
+plt.ylabel('学生人数', fontsize=12)
+plt.axvline(average_score, color='red', linestyle='--', linewidth=2,
+            label=f'平均分: {average_score:.2f}')
+plt.text(average_score + 1, max(n) * 0.9, f'平均分: {average_score:.2f}',
+         color='red', fontsize=10, fontweight='bold')
+plt.legend()
+plt.tight_layout()
+plt.savefig('作业_成绩分布.png', dpi=300, bbox_inches='tight')
+plt.show()
 
 print("\n" + "=" * 50)
 print("作业完成！")
