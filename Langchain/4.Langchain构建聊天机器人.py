@@ -28,7 +28,7 @@ prompt_template = ChatPromptTemplate.from_messages([
     MessagesPlaceholder(variable_name='my_msg') # 添加历史记录，注释掉，每次都是单独的
 ])
 
-# 得到链
+# 得到链。能够通过链连接起来的，都是 Runnable 对象
 chain = prompt_template | model
 
 # 保存聊天的历史记录
