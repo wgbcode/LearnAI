@@ -3,7 +3,7 @@
 # 接口测试工具：Postman； ApiPost
 
 import os
-
+from dotenv import load_dotenv
 import uvicorn
 from fastapi import FastAPI
 from langchain_core.messages import SystemMessage, HumanMessage
@@ -12,6 +12,8 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 from langserve import add_routes, RemoteRunnable
 
+# 加载环境变量
+load_dotenv()
 
 # 步骤一：创建大模型实例
 model = ChatOpenAI(model='gpt-4-turbo')

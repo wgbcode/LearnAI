@@ -1,9 +1,12 @@
 import os
-
+from dotenv import load_dotenv
 from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
+
+# 加载环境变量
+load_dotenv()
 
 # 步骤一：创建大模型实例
 model = ChatOpenAI(model='gpt-4-turbo')

@@ -4,12 +4,15 @@
 # 第三方依赖包：pip install langchain_community
 
 import os
-
+from dotenv import load_dotenv
 from langchain_core.messages import HumanMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables import RunnableWithMessageHistory
 from langchain_openai import ChatOpenAI
 from langchain_community.chat_message_histories import ChatMessageHistory
+
+# 加载环境变量
+load_dotenv()
 
 # 聊天机器人案例
 model = ChatOpenAI(model='gpt-4-turbo')
