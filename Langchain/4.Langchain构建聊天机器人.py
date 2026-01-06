@@ -48,7 +48,7 @@ do_message = RunnableWithMessageHistory(
 )
 
 # 创建 fastAPI 的应用
-app = FastAPI(title='我的Langchain服务',version='1.0.0',description='聊天机器人')
+app = FastAPI(title='聊天机器人',version='1.0.0',description='支持上下文功能和流式输出功能')
 
 # 自定义接口
 class ParamsType(TypedDict):
