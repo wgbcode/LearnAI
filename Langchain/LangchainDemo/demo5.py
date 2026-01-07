@@ -54,7 +54,7 @@ don't know. Use three sentences maximum and keep the answer concise.\n
 prompt = ChatPromptTemplate.from_messages(  # 提问和回答的 历史记录  模板
     [
         ("system", system_prompt),
-        MessagesPlaceholder("chat_history"),  #
+        MessagesPlaceholder("chat_history"),
         ("human", "{input}"),
     ]
 )
