@@ -24,7 +24,7 @@ print(result)
 
 # 步骤三：创建返回的数据解析器
 parser = StrOutputParser
-print(parser.invoke(result))
+# print(parser.invoke(result))
 
 # 步骤四：得到链
 chain = model | parser
