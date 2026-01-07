@@ -9,16 +9,16 @@ from langchain_openai import ChatOpenAI
 load_dotenv()
 
 # 步骤一：创建大模型实例
-model = ChatOpenAI(model='gpt-4-turbo')
+model = ChatOpenAI(model='gpt-5-mini')
 
 # 步骤二：定义提示模板
-prompt_template = ChatPromptTemplate.from_message([
+prompt_template = ChatPromptTemplate.from_messages([
     ('system','请将下面的内容翻译成{language}'),
     ('user',"{text}")
 ])
 
 # 步骤三：创建返回的数据解析器
-parser = StrOutputParser
+parser = StrOutputParser()
 
 # 步骤四：得到链
 chain = prompt_template | model | parser
@@ -26,7 +26,7 @@ chain = prompt_template | model | parser
 # 步骤五：直接使用 chain 来调用
 print(chain.invoke({
     'language': 'English',
-    'text':'我下午还有一节课，不能去球了'
+    'text':'我下午还有一节课，不能去打球了'
 }))
 
 

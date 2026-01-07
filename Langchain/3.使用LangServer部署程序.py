@@ -6,7 +6,6 @@ import os
 from dotenv import load_dotenv
 import uvicorn
 from fastapi import FastAPI
-from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
@@ -16,25 +15,25 @@ from langserve import add_routes, RemoteRunnable
 load_dotenv()
 
 # 步骤一：创建大模型实例
-model = ChatOpenAI(model='gpt-4-turbo')
+model = ChatOpenAI(model='gpt-5-mini')
 
 # 步骤二：定义提示模板
-prompt_template = ChatPromptTemplate.from_message([
+prompt_template = ChatPromptTemplate.from_messages([
     ('system','请将下面的内容翻译成{language}'),
     ('user',"{text}")
 ])
 
 # 步骤三：创建返回的数据解析器
-parser = StrOutputParser
+parser = StrOutputParser()
 
 # 步骤四：得到链
 chain = prompt_template | model | parser
 
 # 步骤五：直接使用 chain 来调用
-print(chain.invoke({
-    'language': 'English',
-    'text':'我下午还有一节课，不能去球了'
-}))
+# print(chain.invoke({
+#     'language': 'English',
+#     'text':'杰克，我下午还有一节课，不能去打蓝球了'
+# }))
 
 # 步骤六：把我们的程序部署成服务
 # 创建 fastAPI 的应用
@@ -44,7 +43,7 @@ add_routes(app,chain,path='/chainDemo')
 # 启动服务
 if __name__ == '__main__':
     # post 请求
-    # 接口路径：http://172.0.0.1:8000/chainDemo/invoke
+    # 接口路径：http://127.0.0.1:8000/chainDemo/invoke
     # 传参：Body，application/json。{"input":{"language":"English","text":"我要去上课了,不能和你聊天了"}}
     # 输出：output
     uvicorn.run(app, host='127.0.0.1', port=8000)
