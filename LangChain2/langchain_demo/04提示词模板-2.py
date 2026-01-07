@@ -61,6 +61,6 @@ final_template = FewShotPromptTemplate(
 
 #
 chain = final_template | llm
-# resp = chain.invoke({"input": "巴伦·特朗普的父亲是谁？"})
-resp = chain.invoke({"input": "中国古代历史上，唐朝和宋朝哪个朝代延续时间最长？"})
+resp = chain.invoke({"input": "巴伦·特朗普的父亲是谁？"})
+# resp = chain.invoke({"input": "中国古代历史上，唐朝和宋朝哪个朝代延续时间最长？"})
 print(resp)

@@ -51,6 +51,7 @@ final_template = FewShotPromptTemplate(
     suffix="问题: {input}",  # 最后追加的问题模板
     input_variables=["input"],  # 指定输入变量
 )
+# print(f"查看增强后的提问：{final_template.invoke("巴伦·特朗普的父亲是谁？")}")
 
 chain = final_template | gpt_5_mini_llm
 # resp = chain.invoke({"input": "巴伦·特朗普的父亲是谁？"})
