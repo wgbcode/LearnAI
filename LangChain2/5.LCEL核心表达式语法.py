@@ -52,7 +52,7 @@ r6 = RunnableLambda(lambda x: int(x) * 2)
 chain7 = r5.with_fallbacks([r6])
 print(chain7.invoke('2'))
 
-# 5、根据条件动态组件合链
+# 5、根据条件动态组件合链。如通过这个方法写一个路由调度器，针对不同领域的问题，使用不同的大模型调用链
 r7 = RunnableLambda(lambda x: x + 1)
 r8 = RunnableLambda(lambda x: x * 20)
 r9 = RunnableLambda(lambda x: x * 30)
