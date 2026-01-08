@@ -1,7 +1,7 @@
 from langchain_core.messages import HumanMessage
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import  MessagesPlaceholder, FewShotChatMessagePromptTemplate
-from llm import gpt_5_mini_llm
+from llm_libs import llm
 from langchain_core.prompts import ChatPromptTemplate
 
 
@@ -36,9 +36,9 @@ final_template = ChatPromptTemplate.from_messages([
 
 # chain = final_template | llm
 # 加入输出解析器
-chain = final_template | gpt_5_mini_llm | StrOutputParser()
+chain = final_template | llm | StrOutputParser()
 # 能自动判断是否需要用到预定义好的提示词模板
 resp = chain.invoke({"msgs": [HumanMessage(content="2 🦜 9 的结果是多少？")]})
 # resp = chain.invoke({"msgs": [HumanMessage(content="中国最后一个皇帝是谁？")]})
 # print(resp.content)
-print(resp)
+print(f"结果：{resp}")

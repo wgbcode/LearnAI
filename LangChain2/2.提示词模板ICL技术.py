@@ -1,4 +1,4 @@
-from llm import gpt_5_mini_llm
+from llm_libs import llm
 from langchain_core.prompts import PromptTemplate, FewShotPromptTemplate
 
 # 步骤一： 提供示例
@@ -53,7 +53,7 @@ final_template = FewShotPromptTemplate(
 )
 # print(f"查看增强后的提问：{final_template.invoke("巴伦·特朗普的父亲是谁？")}")
 
-chain = final_template | gpt_5_mini_llm
+chain = final_template | llm
 # resp = chain.invoke({"input": "巴伦·特朗普的父亲是谁？"})
 resp = chain.invoke({"input": "中国古代历史上，唐朝和宋朝哪个朝代延续时间最长？"})
 print(f"回答：{resp}")
