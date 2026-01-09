@@ -74,6 +74,7 @@ def summarize_messages(current_input):
     }
 
 
+
 # 最终的链
 # 1、 {input: 原来的，messages_summarized=summarize_messages函数执行后的返回值}
 # 2、 {input: 原来的， chat_history: messages_summarized['original_messages'], system_message: messages_summarized['summary_message']}

@@ -7,9 +7,9 @@ from typing import Optional
 import json
 
 # 1、方式一：使用 StrOutputParser
-# chain =  llm | StrOutputParser()
-# resp = chain.invoke(input="中国最后一个皇帝是谁？")
-# print(resp)
+chain =  llm | StrOutputParser()
+resp = chain.invoke(input="中国最后一个皇帝是谁？")
+print(resp)
 
 # 2、方式2：使用 SimpleJsonOutputParser(deepseek可能会不支持）
 # 创建聊天提示模板，要求模型以特定格式回答问题
@@ -38,14 +38,14 @@ import json
 # print(json.dumps(resp.__dict__)) # 结构化输出的字符串格式
 
 # 4、方式4：使用 bind_tools （处理 deepseek 无法结构化输出问题，底层本质也是基于 with_structured_output 实现）
-class ResponseFormatter(BaseModel):
-    """始终使用此工具来结构化你的用户响应"""  # 文档字符串说明这个类用于格式化响应
-    answer: str = Field(description="对用户问题的回答")  # 回答内容字段
-    followup_question: str = Field(description="用户可能提出的后续问题")  # 后续问题字段
-runnable = llm.bind_tools([ResponseFormatter])
-resp = runnable.invoke("细胞的动力源是什么？")
-print(resp)
-print(resp.tool_calls[-1]['args'])
-resp.pretty_print() # 美化打印
+# class ResponseFormatter(BaseModel):
+#     """始终使用此工具来结构化你的用户响应"""  # 文档字符串说明这个类用于格式化响应
+#     answer: str = Field(description="对用户问题的回答")  # 回答内容字段
+#     followup_question: str = Field(description="用户可能提出的后续问题")  # 后续问题字段
+# runnable = llm.bind_tools([ResponseFormatter])
+# resp = runnable.invoke("细胞的动力源是什么？")
+# print(resp)
+# print(resp.tool_calls[-1]['args'])
+# resp.pretty_print() # 美化打印
 
 
