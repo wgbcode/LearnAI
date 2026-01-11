@@ -16,12 +16,13 @@ from fastapi.responses import StreamingResponse
 from typing import TypedDict
 
 prompt = ChatPromptTemplate.from_messages([
-    ('system','你是一个乐于助人的助手。尽你所能回答所有问题。提供的聊天历史包含与你对话用户的相关信息。'),
+    ('system', '你是一个乐于助人的助手。尽你所能回答所有问题。提供的聊天历史包含与你对话用户的相关信息。'),
     MessagesPlaceholder(variable_name='chat_history', optional=True),
-    ('human','{input}')
+    ('human', '{input}')
 ])
 
 chain = prompt | llm
+
 
 def get_session_history(session_id: str):
     """从关系型数据库的历史消息列表中 返回当前会话 的所有历史消息"""
@@ -30,12 +31,14 @@ def get_session_history(session_id: str):
         connection_string='sqlite:///chat_history.db',
     )
 
+
 chain_with_message_history = RunnableWithMessageHistory(
     chain,
     get_session_history,
     input_messages_key='input',
     history_messages_key='chat_history',
 )
+
 
 def summarize_messages(current_input):
     """剪辑和摘要上下午，历史记录"""
@@ -69,12 +72,14 @@ def summarize_messages(current_input):
         "summary": summary_message  # 生成的摘要
     }
 
+
 final_chain = (RunnablePassthrough.assign(messages_summarized=summarize_messages)
                | RunnablePassthrough.assign(
             input=lambda x: x['input'],
             chat_history=lambda x: x['messages_summarized']['original_messages'],
             system_message=lambda
-                x: f"你是一个乐于助人的助手。尽你所能回答所有问题。摘要：{x['messages_summarized']['summary'].content}" if x[
+                x: f"你是一个乐于助人的助手。尽你所能回答所有问题。摘要：{x['messages_summarized']['summary'].content}" if
+            x[
                 'messages_summarized'].get("summary") else "无摘要"
         ) | chain_with_message_history)
 
@@ -84,19 +89,26 @@ final_chain = (RunnablePassthrough.assign(messages_summarized=summarize_messages
 # print(result)
 
 # 创建 fastAPI 的应用
-app = FastAPI(title='多模态聊天机器人',version='1.0.0',description='支持上下文和流式输出功能')
+app = FastAPI(title='多模态聊天机器人', version='1.0.0', description='支持上下文和流式输出功能')
+
+
 class ParamsType(TypedDict):
     content: str
+
+
 class ResponseType(TypedDict):
     data: str
+
+
 @app.post("/v1/chat")
-def chat(params: ParamsType)->ResponseType:
+def chat(params: ParamsType) -> ResponseType:
     config = {'configurable': {'session_id': 'zs123'}}
-    query_obj = {'input': params.get('content',''), "config": config}
-    resp = final_chain.invoke(query_obj,config=config)
+    query_obj = {'input': params.get('content', ''), "config": config}
+    resp = final_chain.invoke(query_obj, config=config)
     return {
-        "data":resp.content
+        "data": resp.content
     }
+
 
 # 启动服务
 if __name__ == '__main__':

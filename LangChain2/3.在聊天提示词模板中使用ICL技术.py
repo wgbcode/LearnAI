@@ -1,9 +1,8 @@
 from langchain_core.messages import HumanMessage
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import  MessagesPlaceholder, FewShotChatMessagePromptTemplate
+from langchain_core.prompts import MessagesPlaceholder, FewShotChatMessagePromptTemplate
 from llm_libs import llm
 from langchain_core.prompts import ChatPromptTemplate
-
 
 # ICL:
 #  2 🦜 9 的结果是多少？
@@ -32,7 +31,6 @@ final_template = ChatPromptTemplate.from_messages([
     few_shot_prompt,
     MessagesPlaceholder("msgs")  #
 ])
-
 
 # chain = final_template | llm
 # 加入输出解析器
