@@ -1,6 +1,6 @@
 """
 知识点：
-一、创建 Langgraph 项目
+一、创建 Langgraph-agent 项目
 1、创建虚拟环境
 （1）创建虚拟环境：python -m venv .venv
 （2）激活虚拟环境：.\.venv\Scripts\activate
@@ -12,4 +12,38 @@
 3、创建项目模板
 （1）不使用模板（交互式命令选择）：langgraph new
 （2）使用模板：langgraph new my_langgraph --template new-langgraph-project-python
+4、将 src 标记为源代码根目录（pycharm）
+
+二、创建和使用 agent
+（1）创建 agent 的方法又又又改变了，要通过 “from langchain.agents import create_agent” 导入使用
+（2）传参方式要看官方文档
+
+三、创建和使用 tool 工具
+1、三种方法创建方法
+（1）从函数创建工具（推荐）。@tools（本质是将函数包裹进了一个 wrapper 函数中）
+（2）从可运行对象。StructuredTool.from_function
+（3）子类化 BaseTool。as_tool
+2、除了 description，也要记得给每个参数和返回值添加类型、作用提示，提高大模型的识别精度和输出准确率（也是三种方法）
+（1）args_schema
+（2）Annotated
+（3）注释
+3、注意事项
+（1）工具的调用顺序是不确定的，由大模型决定
+（2）所以，需要为每个工具提示清晰明确的 description
+（3）在一个工具执行完毕后，可以要求它优先执行哪一个工具
+
+四、添加上下文功能
+1、Configurable（由用户传进来）
+2、AgentState
+（1）类似于 Vue3 中的 Pinia，是一个全局数据管理库，支持读写每一轮的对话记录
+（2）如果不传，会有一个默认的 State
+（3）如果传，可以添加自定义的字段，并且可以通过 Command 方法，来修改每一轮的 State
+
+五、添加网络搜索功能
+（1）通过添加一个工具实现
+（2）需要使用外部的大模型，如智谱 ZhipuAI
+
+六、添加短期记忆功能（对话）、长期记忆功能（会话）
+（1）短期记忆配置字段：checkpointer
+（2）长期记忆配置字段：store（基于短期记忆实现）
 """
