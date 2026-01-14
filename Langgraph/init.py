@@ -40,10 +40,24 @@
 （3）如果传，可以添加自定义的字段，并且可以通过 Command 方法，来修改每一轮的 State
 
 五、添加网络搜索功能
-（1）通过添加一个工具实现
-（2）需要使用外部的大模型，如智谱 ZhipuAI
+1、通过添加一个工具实现
+2、需要使用外部的大模型，如智谱 ZhipuAI
 
 六、添加短期记忆功能（对话）、长期记忆功能（会话）
-（1）短期记忆配置字段：checkpointer
-（2）长期记忆配置字段：store（基于短期记忆实现）
+1、短期记忆配置字段：checkpointer
+2、长期记忆配置字段：store（基于短期记忆实现）
+
+七、使用 MCP 调用工具
+1、MCP 协议（基于 http 和 sse，sse 又基于 websocket）
+（1）同时支持 sse 和 post
+（2）同时支持有状态和无状态服务器（无状态服务器无法使用 sse 建立长连接）
+（3）调 MCP 工具时，要异步，即 agent.ainvoke
+2、三种创建/调用 MCP 服务的方式
+（1）FastMCP (基于 fastapi 实现）
+（2）java（SpringAI）
+（3）远程 MCP 服务
+3、权限认证和安全：token
+（1）后端创建 token
+（2）后端配置 token
+（3）前端传 token
 """
