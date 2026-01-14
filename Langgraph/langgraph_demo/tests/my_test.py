@@ -4,7 +4,7 @@ client = get_sync_client(url="http://localhost:2024")
 
 for chunk in client.runs.stream(
     None,  # Threadless run
-    "agent", # Name of assistant. Defined in langgraph.json.
+    "workflow_agent", # Name of assistant. Defined in langgraph.json.
     input={
         "messages": [{
             "role": "human",

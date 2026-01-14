@@ -10,7 +10,7 @@ client = get_client(url="http://localhost:2024")  # 接口地址
 async def main():
     async for chunk in client.runs.stream(
         None,  # Threadless run
-        "agent", # Name of assistant. Defined in langgraph.json.
+        "workflow_agent", # Name of assistant. Defined in langgraph.json.
         input={
         "messages": [{
             "role": "human",

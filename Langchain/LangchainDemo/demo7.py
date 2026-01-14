@@ -76,7 +76,7 @@ urls = [
 vectorstore = Chroma(persist_directory=persist_dir, embedding_function=embeddings)
 
 # 测试向量数据库的相似检索
-# result = vectorstore.similarity_search_with_score('how do I build a RAG agent')
+# result = vectorstore.similarity_search_with_score('how do I build a RAG workflow_agent')
 # print(result[0])
 # print(result[0][0].metadata['publish_year'])
 
@@ -106,7 +106,7 @@ class Search(BaseModel):
 
 chain = {'question': RunnablePassthrough()} | prompt | model.with_structured_output(Search)
 
-# resp1 = chain.invoke('how do I build a RAG agent?')
+# resp1 = chain.invoke('how do I build a RAG workflow_agent?')
 # print(resp1)
 # resp2 = chain.invoke('videos on RAG published in 2023')
 # print(resp2)

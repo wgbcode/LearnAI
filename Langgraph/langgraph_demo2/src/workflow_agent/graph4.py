@@ -75,7 +75,7 @@ async def create_graph():
     return graph
 
 
-# agent = asyncio.run(create_graph())
+# workflow_agent = asyncio.run(create_graph())
 
 async def run_graph():
     graph = await create_graph()

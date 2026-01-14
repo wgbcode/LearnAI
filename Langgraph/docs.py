@@ -1,6 +1,6 @@
 """
 知识点：
-一、创建 Langgraph-agent 项目
+一、创建 Langgraph-workflow_agent 项目
 1、创建虚拟环境
 （1）创建虚拟环境：python -m venv .venv
 （2）激活虚拟环境：.\.venv\Scripts\activate
@@ -14,8 +14,8 @@
 （2）使用模板：langgraph new my_langgraph --template new-langgraph-project-python
 4、将 src 标记为源代码根目录（pycharm）
 
-二、创建和使用 agent
-（1）创建 agent 的方法又又又改变了，要通过 “from langchain.agents import create_agent” 导入使用
+二、创建和使用 workflow_agent
+（1）创建 workflow_agent 的方法又又又改变了，要通过 “from langchain.agents import create_agent” 导入使用
 （2）传参方式要看官方文档
 
 三、创建和使用 tool 工具
@@ -51,7 +51,7 @@
 1、MCP 协议（基于 http 和 sse，sse 又基于 websocket）
 （1）同时支持 sse 和 post
 （2）同时支持有状态和无状态服务器（无状态服务器无法使用 sse 建立长连接）
-（3）调 MCP 工具时，要异步，即 agent.ainvoke
+（3）调 MCP 工具时，要异步，即 workflow_agent.ainvoke
 2、三种创建/调用 MCP 服务的方式
 （1）FastMCP (基于 fastapi 实现）
 （2）java（SpringAI）

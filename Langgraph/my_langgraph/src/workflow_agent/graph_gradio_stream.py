@@ -1,8 +1,9 @@
 import asyncio
 import json
 from typing import Dict, Any, List
-
-from langchain_core.messages import ToolMessage, AIMessage, ToolCall
+import gradio as gr
+from gradio import ChatMessage
+from langchain_core.messages import ToolMessage, AIMessage, ToolCall, HumanMessage
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.constants import END, START
@@ -19,12 +20,12 @@ zhipuai_mcp_server_config = {
 }
 
 my12306_mcp_server_config = {
-    'url': 'https://mcp.api-inference.modelscope.net/0913830270ba46/sse',
+    'url': 'https://mcp.api-inference.modelscope.net/f938a50626714f/sse',
     'transport': 'sse',
 }
 
 chart_mcp_server_config = {
-    'url': 'https://mcp.api-inference.modelscope.net/3e978ace67314a/sse',
+    'url': 'https://mcp.api-inference.modelscope.net/c76cefe1dbae4f/sse',
     'transport': 'sse',
 }
 
@@ -193,64 +194,136 @@ async def create_graph():
     return graph
 
 
-# workflow_agent = asyncio.run(create_graph())
-
-async def run_graph():
-    graph = await create_graph()
-    # 配置参数，包含乘客ID和线程ID
-    config = {
-        "configurable": {
-            # 检查点由session_id访问
-            "thread_id": 'zs12311',
-        }
+graph = asyncio.run(create_graph())
+ # 配置参数，包含乘客ID和线程ID
+config = {
+    "configurable": {
+        # 检查点由session_id访问
+        "thread_id": 'zs12311',
     }
+}
+
+def add_message(chat_history, user_message):
+    if user_message:
+        chat_history.append({"role": "user", "content": user_message})
+    return chat_history, gr.Textbox(value=None, interactive=False)
 
 
+async def submit_messages(chat_history: List[Dict]):
+    """流式处理消息的核心函数"""
+    user_input = chat_history[-1]['content']
+    current_state = graph.get_state(config)
+    full_response = ""  # 累积完整响应
+    tool_calls = []  # 记录工具调用
 
-    def print_message(event, result):
-        """格式化输出消息"""
-        messages = event.get('messages')
-        if messages:
-            if isinstance(messages, list):
-                message = messages[-1]  # 如果消息是列表，则取最后一个
-            if message.__class__.__name__ == 'AIMessage':
-                if message.content:
-                    # print(result)
-                    result = message.content  # 需要在展示的消息
-            msg_repr = message.pretty_repr(html=True)
-            if len(msg_repr) > 1500:
-                msg_repr = msg_repr[:1500] + " ... （已截断）"  # 超过最大长度则截断
-            print(msg_repr)  # 输出消息的表示形式
-        return result
+    # 处理中断恢复或正常消息
+    inputs = Command(resume={'answer': user_input}) if current_state.next else {
+        'messages': [HumanMessage(content=user_input)]}
 
-    async def execute_graph(user_input: str) -> str:
-        """ 执行工作流的函数"""
-        result = ''  # AI助手的最后一条消息
-        current_state = graph.get_state(config)
-        if current_state.next:  # 出现了工作流的中断
-            human_command = Command(resume={'answer': user_input})
-            async for chunk in graph.astream(human_command, config, stream_mode='values'):
-                result = print_message(chunk, result)
-            return result
-        else:
-            async for chunk in graph.astream({'messages': ('user', user_input)}, config, stream_mode='values'):
-                result = print_message(chunk, result)
-                # print(chunk['__interrupt__'])
-                # if chunk.get('__interrupt__', None):
-                #     print(chunk['__interrupt__'])
+    async for chunk in graph.astream(
+            inputs,
+            config,
+            stream_mode=["messages", "updates"],  # 同时监听消息和状态更新
+    ):
+        if 'messages' in chunk:
+            for message in chunk[1]:
+                # 处理AI消息流式输出
+                if isinstance(message, AIMessage) and message.content:
+                    full_response += message.content
+                    # 更新最后一条消息而非追加
+                    if chat_history and isinstance(chat_history[-1], ChatMessage) and 'title' not in chat_history[-1].metadata:
+                        chat_history[-1].content = full_response
+                    else:
+                        chat_history.append(ChatMessage(role="assistant", content=message.content))
+                    yield chat_history
 
-        current_state = graph.get_state(config)
-        if current_state.next:  # 出现了工作流的中断
-            result = current_state.interrupts[0].value
+                # 处理工具调用消息
+                elif isinstance(message, ToolMessage):
+                    tool_msg = f"🔧 调用工具: {message.name}\n{message.content}"
+                    chat_history.append(ChatMessage(role="assistant", content=tool_msg,
+                                        metadata={"title": f"🛠️ Used tool {message.name}"}))
+                    yield chat_history
 
-        return result
+    # 检查新中断
+    current_state = graph.get_state(config)
+    if current_state.next:
+        interrupt_msg = current_state.interrupts[0].value
+        # chat_history.append({'role': 'assistant', 'content': interrupt_msg})
+        chat_history.append(ChatMessage(role="assistant", content=interrupt_msg))
+        yield chat_history
 
-    # 执行工作流
-    while True:
-        user_input = input('用户：')
-        res = await execute_graph(user_input)
-        print('AI: ', res)
 
+# 创建Gradio界面
+with gr.Blocks(
+        title='我的智能小秘书',
+        theme=gr.themes.Soft(),
+        css=".system {color: #666; font-style: italic;}"  # 自定义系统消息样式
+) as demo:
+    # 聊天历史记录组件
+    chatbot = gr.Chatbot(
+        type="messages",
+        height=500,
+        render_markdown=True,  # 支持Markdown格式
+        line_breaks=False  # 禁用自动换行符
+    )
+
+    # 输入组件
+    chat_input = gr.Textbox(
+        placeholder="请输入您的消息...",
+        label="用户输入",
+        max_lines=5,
+        container=False
+    )
+
+    # 控制按钮
+    with gr.Row():
+        submit_btn = gr.Button("发送", variant="primary")
+        clear_btn = gr.Button("清空对话")
+
+    # 消息提交处理链
+    msg_handler = chat_input.submit(
+        fn=add_message,
+        inputs=[chatbot, chat_input],
+        outputs=[chatbot, chat_input],
+        queue=False
+    ).then(
+        fn=submit_messages,
+        inputs=chatbot,
+        outputs=chatbot,
+        api_name="chat_stream"  # API端点名称
+    )
+
+    # 按钮点击处理链
+    btn_handler = submit_btn.click(
+        fn=add_message,
+        inputs=[chatbot, chat_input],
+        outputs=[chatbot, chat_input],
+        queue=False
+    ).then(
+        fn=submit_messages,
+        inputs=chatbot,
+        outputs=chatbot
+    )
+
+    # 清空对话
+    clear_btn.click(
+        fn=lambda: [],
+        inputs=None,
+        outputs=chatbot,
+        queue=False
+    )
+
+    # 重置输入框状态
+    msg_handler.then(
+        lambda: gr.Textbox(interactive=True),
+        None,
+        [chat_input]
+    )
+    btn_handler.then(
+        lambda: gr.Textbox(interactive=True),
+        None,
+        [chat_input]
+    )
 
 if __name__ == '__main__':
-    asyncio.run(run_graph())
+    demo.launch()
