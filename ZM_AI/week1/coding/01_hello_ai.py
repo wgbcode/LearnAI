@@ -8,5 +8,5 @@ print("Hello, AI! 我是AI算法的学习者。")
 course_name = "AI算法课程"
 week = 1
 
-# 3. f-string 字符串格式化（Python 3.6+推荐方式）
+# 3. f-string 字符串格式化（Syntax 3.6+推荐方式）
 print(f"正在进行《{course_name}》第{week}周的学习。")
