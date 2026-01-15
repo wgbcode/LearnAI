@@ -62,4 +62,25 @@
 （3）前端传 token
 
 八、工作流 WorkFlow
+1、节点 node（函数；agent）
+2、边 edge（包含路由 router）
+3、状态 state（基类为 MessageState）
+
+九、智能小秘书案例【从0到1实现】
+1、三个外部 MCP（魔塔；百炼）
+（1）可以帮我查询火车票（火车票查询 MCP）
+（2）可以帮我生成分析图表（图表 MCP）
+（3）可以帮我获取网络上的数据（普通数据查询 MCP）
+2、核心知识点（结合工作流实现）
+（1）异步
+（2）并发
+（3）参数验证
+（4）错误处理
+（5）人工介入(Human-in-the-loop。llm => human => tools；验证/修改状态/增加一些新的值；中断工作流）
+（6）流式输出
+3、四种消息类型
+（1）HumanMessage
+（2）AIMessage
+（3）ToolsMessage
+（4）SystemMessage
 """
