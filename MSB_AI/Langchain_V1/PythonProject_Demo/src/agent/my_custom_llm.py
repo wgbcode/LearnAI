@@ -44,7 +44,7 @@ class BailianCustomChatModel(BaseChatModel):
             elif isinstance(message, SystemMessage):
                 openai_messages.append({"role": "system", "content": message.content})
 
-        # 调用API
+        # 调用API。还是使用 OpenAI 来调用
         client = OpenAI(
             api_key=self.api_key or os.getenv("DASHSCOPE_API_KEY"),
             base_url=self.base_url,
@@ -66,6 +66,7 @@ class BailianCustomChatModel(BaseChatModel):
             rc = None
             if completion.choices and completion.choices[0].message.content:
                 if getattr(completion.choices[0].message, 'model_extra', None):
+                    # 核心代码，拿到深度思考的内容，并包装成 AIMessage 返回
                     if 'reasoning_content' in getattr(completion.choices[0].message, 'model_extra', None):
                         rc = getattr(completion.choices[0].message, 'model_extra', None)['reasoning_content']
                 # 创建AIMessage

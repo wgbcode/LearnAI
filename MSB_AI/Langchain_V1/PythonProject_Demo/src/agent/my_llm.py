@@ -7,12 +7,12 @@ from agent import ALIBABA_API_KEY, ALIBABA_BASE_URL, OPENAI_API_KEY, OPENAI_BASE
 from agent import BailianCustomChatModel
 
 # 调用阿里云百炼里面的的 DeepSeek 模型
-llm = ChatOpenAI(  # 第一种
-    model_name="deepseek-v3.2",
-    temperature=1.1,
-    api_key=ALIBABA_API_KEY,
-    base_url=ALIBABA_BASE_URL,
-)
+# llm = ChatOpenAI(  # 第一种
+#     model_name="deepseek-v3.2",
+#     temperature=1.1,
+#     api_key=ALIBABA_API_KEY,
+#     base_url=ALIBABA_BASE_URL,
+# )
 
 # llm = ChatOpenAI(  # 第一种
 #     model_name="deepseek-chat",
@@ -55,14 +55,15 @@ llm = ChatOpenAI(  # 第一种
 #     base_url=OPENAI_BASE_URL,
 # )
 
-# llm = ChatOpenAI(
-#     model='qwen3-max',
-#     # model='qwen-plus',
-#     # model='qwen3-8b',
-#     temperature=0.6,
-#     api_key=ALIBABA_API_KEY,
-#     base_url=ALIBABA_BASE_URL,
-# )
+# 千问3-阿里巴巴开源模型
+llm = ChatOpenAI(
+    model='qwen3-max',
+    # model='qwen-plus',
+    # model='qwen3-8b',
+    temperature=0.6,
+    api_key=ALIBABA_API_KEY,
+    base_url=ALIBABA_BASE_URL,
+)
 
 
 # 速率限制
@@ -80,4 +81,4 @@ llm = ChatOpenAI(  # 第一种
 #     rate_limiter=rate_limiter
 # )
 
-zhipuai_client = ZhipuAI(api_key=ZHIPU_API_KEY)
+# zhipuai_client = ZhipuAI(api_key=ZHIPU_API_KEY)

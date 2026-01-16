@@ -15,10 +15,10 @@ class MyWebSearchTool(BaseTool):
     name: str = "web_search2"  # 定义工具的名称
 
     description: str = "使用这个工具可以进行网络搜索。"
-    # 第一种写法
+    # 第一种写法：静态参数
     # args_schema: Type[BaseModel] = SearchArgs  # 工具的参数
 
-    # 第二种写法
+    # 第二种写法：动态创建参数
     def __init__(self):
         super().__init__()
         self.args_schema = create_model("SearchInput", query=(str, Field(..., description='需要进行互联网查询的查询信息')))
