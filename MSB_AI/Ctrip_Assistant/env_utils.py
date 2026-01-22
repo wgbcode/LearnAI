@@ -11,9 +11,10 @@ LANGSMITH_API_KEY=os.getenv('LANGSMITH_API_KEY')
 LANGSMITH_PROJECT=os.getenv('LANGSMITH_PROJECT')
 # Tavily
 TAVILY_API_KEY=os.getenv('TAVILY_API_KEY')
+#  openai
 OPENAI_BASE_URL=os.getenv('OPENAI_BASE_URL')
 OPENAI_API_KEY=os.getenv('OPENAI_API_KEY')
-# 未内置大模型：如 glm-4
+# 智谱
 GLM_OPENAI_BASE_URL=os.getenv('GLM_OPENAI_BASE_URL')
 GLM_OPENAI_API_KEY=os.getenv('GLM_OPENAI_API_KEY')
 # 私有化部署大模型：qwen-3
